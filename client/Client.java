@@ -2,52 +2,40 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+//import java.util.logging.Logger; //
 
-public class Client {
-    private static final Logger log = Logger.getLogger(Client.class.getName());
 
-    private static boolean isValidUsername(String username) {
+//Programa do cliente
+//pede um username e valida com regex
+//abre um Socket para o servidor
+//cria uma thread (ServerListener) para ouvir o servidor
+//na thread principal, lê o teclado e envia cada linha ao servidor
 
-        String regex = "^[A-Za-z0-9_][A-Za-z0-9_\s]{2,15}$";
-        Pattern p = Pattern.compile(regex);
-
-        if(username == null) {
-            return false;
-        }
-
-        Matcher m = p.matcher(username);
-        return m.matches();
-    }
-
-    private static String getUserData(Scanner userInput, Socket socket) {
+public class Client {  //classe cleinte 
+    
+    private static String getUserData(Scanner userInput, Socket socket) { //Scanner classe para ler dados
         String username = null;
-        while(true) {
-            System.out.printf("Nome de usuário: ");
+        while(true) { //solicita o nome e repete até passar na vilidaçãp
+            System.out.printf("Nome de usuário: "); 
             username = userInput.nextLine().trim();
 
             if(username.isEmpty()) {
                 username = socket.getLocalAddress().getHostAddress() + ":" + socket.getLocalPort();
                 break;
-            }
-
-            if(isValidUsername(username)) {
-                break;
             } else {
-                System.out.println("O nome de usuário deve ter entre 3 e 16 caracteres válidos.");
+                break;
             }
         }
         return username;
     }
     public static void main(String[] args) {
-        final String SERVER_ADDRESS = "127.0.0.1";
+        final String SERVER_ADDRESS = "127.0.0.1"; // localhost or change IP  ---Define a porta
         final int PORT = 12345;
         Scanner userInput = new Scanner(System.in);
 
         try(Socket socket = new Socket(SERVER_ADDRESS, PORT)) {
-            log.info("Conectou ao servidor " + SERVER_ADDRESS + " PORTA " + PORT);
+            System.out.println("Conectado ao servidor " + SERVER_ADDRESS + " PORTA " + PORT);
+           //log.info("Conectou ao servidor " + SERVER_ADDRESS + " PORTA " + PORT);
 
             final String username = getUserData(userInput, socket);
 
@@ -56,7 +44,7 @@ public class Client {
             new Thread(serverListener).start();
 
             writer.println(username);
-            while(userInput.hasNextLine()){
+            while(userInput.hasNextLine()){  //loop que vai ler o teclado enquanto houver entrada
                 String message = userInput.nextLine();
                 if (message.startsWith(":")) {
                     if (message.equals(":quit")) {
@@ -75,9 +63,10 @@ public class Client {
             }
             userInput.close();
         } catch(IOException e) {
-            log.severe("Não foi possível conectar ao servidor.");
+            System.out.println("Não foi possível conectar ao servidor.");
+
         } finally {
-            log.info("Desconectado.");
+            System.out.println("Desconectado.");
         }
     }
 }
