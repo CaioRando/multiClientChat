@@ -15,7 +15,7 @@ public class ServerListener implements Runnable {
         try {
             this.streamScanner = new Scanner(socket.getInputStream());
         } catch(IOException e) {
-            log.severe("Communication error.");
+            log.severe("Erro de comunicação.");
         }
     }
 

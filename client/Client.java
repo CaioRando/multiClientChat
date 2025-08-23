@@ -22,45 +22,62 @@ public class Client {
         return m.matches();
     }
 
-    private static String getUserData(Scanner userInput) {
-        
+    private static String getUserData(Scanner userInput, Socket socket) {
         String username = null;
         while(true) {
-            System.out.printf("Username: ");
+            System.out.printf("Nome de usuário: ");
             username = userInput.nextLine().trim();
+
+            if(username.isEmpty()) {
+                username = socket.getLocalAddress().getHostAddress() + ":" + socket.getLocalPort();
+                break;
+            }
 
             if(isValidUsername(username)) {
                 break;
             } else {
-                System.out.println("Username must have 3-16 valid characters.");
+                System.out.println("O nome de usuário deve ter entre 3 e 16 caracteres válidos.");
             }
         }
-
         return username;
     }
     public static void main(String[] args) {
-        final String SERVER_ADDRESS = "127.0.0.1"; // localhost or change IP
+        final String SERVER_ADDRESS = "127.0.0.1";
         final int PORT = 12345;
         Scanner userInput = new Scanner(System.in);
-        final String username = getUserData(userInput);
 
         try(Socket socket = new Socket(SERVER_ADDRESS, PORT)) {
-            log.info("Connected to server " + SERVER_ADDRESS + " PORT " + PORT);
+            log.info("Conectou ao servidor " + SERVER_ADDRESS + " PORTA " + PORT);
+
+            final String username = getUserData(userInput, socket);
 
             ServerListener serverListener = new ServerListener(socket);            
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
             new Thread(serverListener).start();
-            
+
             writer.println(username);
             while(userInput.hasNextLine()){
                 String message = userInput.nextLine();
+                if (message.startsWith(":")) {
+                    if (message.equals(":quit")) {
+                        writer.println(username + " saiu do chat.");
+                        break;
+                    } else if (message.startsWith(":name ")) {
+                        String newName = message.substring(6).trim();
+                        writer.println("/name " + newName);
+                    } else {
+                        System.out.println("Comando inexistente.");
+                        continue;
+                    }
+                    continue;
+                }
                 writer.println(message);
             }
             userInput.close();
         } catch(IOException e) {
-            log.severe("Not able to connect to the server.");
+            log.severe("Não foi possível conectar ao servidor.");
         } finally {
-            log.info(" disconnected.");
+            log.info("Desconectado.");
         }
     }
 }

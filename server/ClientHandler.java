@@ -31,15 +31,24 @@ public class ClientHandler implements Runnable {
         try {
             log.info("Client connected: " + clientSocket.getRemoteSocketAddress());
             clientName = streamScanner.nextLine();
-            Server.broadcastMessage("----    " + clientName + " connected to the chat    ----");
+            Server.broadcastMessage("----    " + clientName + " conectado ao chat    ----");
             while(streamScanner.hasNextLine()) {
                 String message = streamScanner.nextLine();
+                if (message.startsWith("/name ")) {
+                    String newName = message.substring(6).trim();
+                    if (!newName.isEmpty()) {
+                        Server.broadcastMessage("---- " + clientName + " mudou o nickname para " + newName + " ----");
+                        clientName = newName;
+                    }
+                    continue;
+                }
+
                 String formattedMessage = "[" + clientName + "]: " + message;
                 Server.broadcastMessage(formattedMessage);
             }
         } finally {
-            log.info("User " + clientName + " disconnected.");
-            Server.broadcastMessage("----    " + clientName + " disconnected from the chat.    ----");
+            log.info("Usuário " + clientName + " desconectado.");
+            Server.broadcastMessage("----    " + clientName + " desconectado do chat.    ----");
             Server.clientHandlers.remove(this);
         }
     }
