@@ -32,22 +32,22 @@ public class ClientHandler implements Runnable { //classe pode ser rodada dentro
     public void run() {
         String clientName = "Unknown";
 
-        DateTimeFormatter timentrada = DateTimeFormatter.ofPattern("HH:mm:ss");
+        DateTimeFormatter entryTime = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 
         try {
             log.info("Client connected: " + clientSocket.getRemoteSocketAddress());
             clientName = streamScanner.nextLine();
 
-            String agora = LocalTime.now().format(timentrada);
-            this.sendMessage(agora + ": CONECTADO!!");
+            String serverTime = LocalTime.now().format(entryTime);
+            this.sendMessage(serverTime + ": CONECTADO!!");
 
             Server.broadcastMessage("----    " + clientName + " conectado ao chat    ----");
 
 
             while(streamScanner.hasNextLine()) {
                 String message = streamScanner.nextLine();
-                if (message.startsWith("/name ")) {
+                if (message.startsWith("/nome ")) {
                     String newName = message.substring(6).trim();
                     if (!newName.isEmpty()) {
                         Server.broadcastMessage("---- " + clientName + " mudou o nickname para " + newName + " ----");
@@ -58,9 +58,9 @@ public class ClientHandler implements Runnable { //classe pode ser rodada dentro
 
                 log.info( clientName + ": " + message);
 
-                this.sendMessage("Você digitou(): " + message);
+                this.sendMessage("Você digitou: " + message);
 
-                String formattedMessage = clientName + "(" + LocalTime.now().format(timentrada) + "): " + message;
+                String formattedMessage = clientName + "(" + LocalTime.now().format(entryTime) + "): " + message;
                 Server.broadcastMessageExcept(formattedMessage, this); //this vai indicar o cliente que mandou a mensagem
             }
         } finally {

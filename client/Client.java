@@ -50,9 +50,9 @@ public class Client {  //classe cleinte
                     if (message.equals(":quit")) {
                         writer.println(username + " saiu do chat.");
                         break;
-                    } else if (message.startsWith(":name ")) {
+                    } else if (message.startsWith(":nome ")) {
                         String newName = message.substring(6).trim();
-                        writer.println("/name " + newName);
+                        writer.println("/nome " + newName);
                     } else {
                         System.out.println("Comando inexistente.");
                         continue;

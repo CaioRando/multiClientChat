@@ -5,13 +5,10 @@ import java.util.logging.Logger;
 
 public class ServerListener implements Runnable {  //classe aux do cliente     ;;permite rodar em Thread
     private static final Logger log = Logger.getLogger(ServerListener.class.getName());
-    private Socket socket;
     private Scanner streamScanner;  //leitor das linhas que vção vir  do servidor
 
 
     public ServerListener(Socket socket) {  //recebe o socket conectado e guarda
-        this.socket = socket;
-
         try {
             this.streamScanner = new Scanner(socket.getInputStream()); //pega canal de entrada, tudo que o servirdor manda
         } catch(IOException e) {

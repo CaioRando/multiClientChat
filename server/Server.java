@@ -12,7 +12,7 @@
 
     public class Server {
         private static final Logger log = Logger.getLogger(Server.class.getName());
-        public static List<ClientHandler> clientHandlers = Collections.synchronizedList(new ArrayList<>()); //lista de todos os clientes logasdos
+        public static List<ClientHandler> clientHandlers = Collections.synchronizedList(new ArrayList<>()); //lista de todos os clientes logados
 
         public static void broadcastMessage(String message) { //mandar a mesma mensagem  para todos os clientes conectados
             log.info("Broadcasting: " + message);
@@ -38,12 +38,12 @@
             try(ServerSocket server = new ServerSocket(PORT)) { //cria um socket do servidor
                 log.info("Server listening in port " + PORT);
 
-                ScheduledExecutorService sched = Executors.newSingleThreadScheduledExecutor(); //roda tarefas de tempos em tempos, cria uma thread dedicada somente para executar tarefas agendadas
-                DateTimeFormatter tickminuto = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"); //formata data e hora
+                ScheduledExecutorService schedule = Executors.newSingleThreadScheduledExecutor(); //roda tarefas de tempos em tempos, cria uma thread dedicada somente para executar tarefas agendadas
+                DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"); //formata data e hora
 
-                sched.scheduleAtFixedRate(() -> {
-                    String agora = LocalDateTime.now().format(tickminuto);
-                    broadcastMessage("Data:" + agora);
+                schedule.scheduleAtFixedRate(() -> {
+                    String localTime = LocalDateTime.now().format(timeFormatter);
+                    broadcastMessage("Data:" + localTime);
                 }, 0,1, TimeUnit.MINUTES); //em um intervalor de 1 minuto vai mandar
 
 
