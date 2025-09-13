@@ -46,17 +46,32 @@ public class Client {  //classe cleinte
             writer.println(username);
             while(userInput.hasNextLine()){  //loop que vai ler o teclado enquanto houver entrada
                 String message = userInput.nextLine();
-                if (message.startsWith(":")) {
-                    if (message.equals(":quit")) {
-                        writer.println(username + " saiu do chat.");
+                if (message.startsWith(":")) {  //VERIFICA se a linha começa com :
+                    if (message.equals(":quit")) { //se o comando for quit
+                        writer.println("/quit"); //avisa o servidor que quer sair
                         break;
+<<<<<<< Updated upstream
                     } else if (message.startsWith(":nome ")) {
                         String newName = message.substring(6).trim();
                         writer.println("/nome " + newName);
+=======
+                    } else if (message.startsWith(":name ")) {
+                       String newName = message.substring(6).trim();
+                        writer.println("/name " + newName);
+>>>>>>> Stashed changes
                     } else {
                         System.out.println("Comando inexistente.");
                         continue;
-                    }
+
+                //        writer.println(username + " saiu do chat.");
+                //        break;
+                //   } else if (message.startsWith(":name ")) {
+                 //       String newName = message.substring(6).trim();
+                 //       writer.println("/name " + newName);
+                 //   } else {
+                 //       System.out.println("Comando inexistente.");
+                 //       continue;
+                }
                     continue;
                 }
                 writer.println(message);
