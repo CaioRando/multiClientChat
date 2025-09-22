@@ -48,17 +48,11 @@ public class Client {  //classe cleinte
                 String message = userInput.nextLine();
                 if (message.startsWith(":")) {  //VERIFICA se a linha começa com :
                     if (message.equals(":quit")) { //se o comando for quit
-                        writer.println("/quit"); //avisa o servidor que quer sair
+                        writer.println(":quit"); //avisa o servidor que quer sair
                         break;
-<<<<<<< Updated upstream
                     } else if (message.startsWith(":nome ")) {
                         String newName = message.substring(6).trim();
-                        writer.println("/nome " + newName);
-=======
-                    } else if (message.startsWith(":name ")) {
-                       String newName = message.substring(6).trim();
-                        writer.println("/name " + newName);
->>>>>>> Stashed changes
+                        writer.println(":nome " + newName);
                     } else {
                         System.out.println("Comando inexistente.");
                         continue;

@@ -47,9 +47,6 @@ public class ClientHandler implements Runnable { //classe pode ser rodada dentro
 
             while(streamScanner.hasNextLine()) {
                 String message = streamScanner.nextLine();
-<<<<<<< Updated upstream
-                if (message.startsWith("/nome ")) {
-=======
                // System.out.println(".(asddfasda)");
                 if (message.equalsIgnoreCase(":quit")) { //não é sensitive case
                  //   System.out.println(".(aaaaaaaaaaaa)");
@@ -58,8 +55,7 @@ public class ClientHandler implements Runnable { //classe pode ser rodada dentro
                 }
 
 
-                if (message.startsWith("/name ")) {
->>>>>>> Stashed changes
+                if (message.startsWith(":nome ")) {
                     String newName = message.substring(6).trim();
                     if (!newName.isEmpty()) {
                         Server.broadcastMessage("---- " + clientName + " mudou o nickname para " + newName + " ----");
@@ -72,7 +68,7 @@ public class ClientHandler implements Runnable { //classe pode ser rodada dentro
 
                 this.sendMessage("Você digitou: " + message);
 
-                String formattedMessage = clientName + "(" + LocalTime.now().format(entryTime) + "): " + message;
+                String formattedMessage = clientName + " (" + LocalTime.now().format(entryTime) + "): " + message;
                 Server.broadcastMessageExcept(formattedMessage, this); //this vai indicar o cliente que mandou a mensagem
             }
         } finally {
