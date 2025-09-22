@@ -47,7 +47,15 @@ public class ClientHandler implements Runnable { //classe pode ser rodada dentro
 
             while(streamScanner.hasNextLine()) {
                 String message = streamScanner.nextLine();
-                if (message.startsWith("/nome ")) {
+               // System.out.println(".(asddfasda)");
+                if (message.equalsIgnoreCase(":quit")) { //não é sensitive case
+                 //   System.out.println(".(aaaaaaaaaaaa)");
+                    sendMessage("OK: desconectando...");
+                    break;
+                }
+
+
+                if (message.startsWith(":nome ")) {
                     String newName = message.substring(6).trim();
                     if (!newName.isEmpty()) {
                         Server.broadcastMessage("---- " + clientName + " mudou o nickname para " + newName + " ----");
@@ -60,14 +68,15 @@ public class ClientHandler implements Runnable { //classe pode ser rodada dentro
 
                 this.sendMessage("Você digitou: " + message);
 
-                String formattedMessage = clientName + "(" + LocalTime.now().format(entryTime) + "): " + message;
+                String formattedMessage = clientName + " (" + LocalTime.now().format(entryTime) + "): " + message;
                 Server.broadcastMessageExcept(formattedMessage, this); //this vai indicar o cliente que mandou a mensagem
             }
         } finally {
+            //ordem de encerrar a conexão TCP associada a esse Socket
+            try { clientSocket.close(); } catch (IOException ignored) {} //libera a porta e os recursos de rede daquela conexão
             log.info("Usuário " + clientName + " desconectado.");
             Server.broadcastMessage("----    " + clientName + " desconectado do chat.    ----");
-            Server.clientHandlers.remove(this);
+            Server.clientHandlers.remove(this); //remove da lista
         }
     }
-
 }

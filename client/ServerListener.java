@@ -18,6 +18,7 @@ public class ServerListener implements Runnable {  //classe aux do cliente     ;
 
     @Override
     public void run() {
+        if (streamScanner == null) return;
         while(streamScanner.hasNextLine()) {  //fica bloqueado até chegar os dados
             String message = streamScanner.nextLine();
             System.out.println(message);
